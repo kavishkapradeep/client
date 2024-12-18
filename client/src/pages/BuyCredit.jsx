@@ -2,8 +2,51 @@ import React, { useContext } from 'react'
 import {assets, plans} from '../assets/assets'
 import {AppContext} from '../context/AppContext'
 import { motion } from "motion/react"
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import axios from 'axios'
+import Stripe from 'stripe'
 const BuyCredit = () => {
-  const {user} =useContext(AppContext)
+  const {user,backendUrl,token,loadCreditsData,setShowLogin} =useContext(AppContext)
+  const navigate = useNavigate()
+  
+  const initpay = async (order)=>{
+      const options= {
+        key:import.meta.env.STRIPE_SECRET_KEY,
+        amount:order.currency,
+        name:"Credits Payment",
+        description:"Credits Payment",
+        order_id:order.id,
+        receipt:order.receipt,
+        handler: async (response)=>{
+          console.log(response);
+        }
+      }
+     
+  }
+
+  const paymentStripe = async (planId)=>{
+    try {
+      if (!user) {
+        setShowLogin(true)
+      }
+
+      const {data} =  await axios.post(backendUrl+'/api/user/pay-stripe',{planId},
+        {headers:{token}}
+      )
+
+      if (data.success) {
+        initpay(data.order)
+        const {session_url} =data
+        window.location.replace(session_url)
+        toast.success(response.data.message)
+      }
+
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
   return (
     <motion.div
     initial={{opacity:0.2,y:100}}
@@ -28,7 +71,8 @@ const BuyCredit = () => {
                 <p className='text-sm'>{item.desc}</p>
                 <p className='mt-6'>
                   <span className='text-3xl font-medium'>${item.price} </span>/ {item.credits} credits</p>
-            <button className=' w-full bg-gray-800 text-white mt-8
+            <button onClick={()=>paymentStripe(item.id)}
+             className=' w-full bg-gray-800 text-white mt-8
             text-sm rounded-md py-2.5 min-w-52'>{user?'purchase':'Get Started'}</button>
             </div>
           ))}
