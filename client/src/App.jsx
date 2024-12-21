@@ -9,6 +9,7 @@ import Login from './components/Login.jsx'
 import { AppContext } from './context/AppContext.jsx'
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
+import Verify from './pages/Verify.jsx'
 
 const App = () => {
   const {showLogin} =useContext(AppContext)
@@ -22,6 +23,7 @@ const App = () => {
         <Route path='/' element={<Home/>}/>
         <Route path='/result' element={<Result/>}/>
         <Route path='/buy' element={<BuyCredit/>}/>
+        <Route path='/success' element={<Verify/>}></Route>
       </Routes>
       <Footer/>
     </div>

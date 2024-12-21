@@ -81,7 +81,7 @@ const Login = () => {
 
             <p className='text-sm text-blue-600 my-4 cursor-pointer '>Forget password</p>
             <button className='bg-blue-600 w-full text-white py-2
-            rounded-full'>create account</button>
+            rounded-full'>{currState=='Login'?'login':'create account'}</button>
             {currState === "Login"?<p className='mt-5 text-center'>Don't have an account ?
                 <span className=' text-blue-600 cursor-pointer' onClick={()=>setCurrState("Sign Up")}>Sign up</span></p>:
                  <p className='mt-5 text-center'>Already have an account?

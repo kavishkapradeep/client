@@ -9,45 +9,36 @@ import Stripe from 'stripe'
 const BuyCredit = () => {
   const {user,backendUrl,token,loadCreditsData,setShowLogin} =useContext(AppContext)
   const navigate = useNavigate()
-  
-  const initpay = async (order)=>{
-      const options= {
-        key:import.meta.env.STRIPE_SECRET_KEY,
-        amount:order.currency,
-        name:"Credits Payment",
-        description:"Credits Payment",
-        order_id:order.id,
-        receipt:order.receipt,
-        handler: async (response)=>{
-          console.log(response);
-        }
-      }
-     
-  }
 
-  const paymentStripe = async (planId)=>{
+  
+  const paymentStripe = async (planId) => {
     try {
       if (!user) {
-        setShowLogin(true)
+        setShowLogin(true);
+        return;
       }
-
-      const {data} =  await axios.post(backendUrl+'/api/user/pay-stripe',{planId},
-        {headers:{token}}
-      )
-
+  
+      const { data } = await axios.post(
+        backendUrl + `/api/user/pay-stripe`,
+        { planId },
+        { headers: { token } }
+      );
+  
       if (data.success) {
-        initpay(data.order)
-        const {session_url} =data
-        window.location.replace(session_url)
-        toast.success(response.data.message)
+        const {session_url} = data
+        window.location.replace(session_url); // This redirects the user to the Stripe Checkout page
+        toast.success("Redirecting to payment...");
       }
-
+      
+      
+      
     } catch (error) {
-      toast.error(error.message)
+      console.error("Payment error:", error);
+      toast.error('An error occurred during the payment process.');
     }
-  }
-
-  return (
+  };
+  
+    return (
     <motion.div
     initial={{opacity:0.2,y:100}}
     transition={{duration:1}}

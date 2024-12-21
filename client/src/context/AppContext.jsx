@@ -56,13 +56,15 @@ const AppContextProvider = (props)=>{
             toast.error(error.message)
         }
     }
+    
 
-    useEffect(()=>{
-        if (token) {
-            loadCreditsData()
-        }
-    },[token])
-
+   
+useEffect(()=>{
+    if (token) {
+        loadCreditsData()
+    }
+},[token])
+  
     const value ={
         user,setUser,showLogin,setShowLogin,backendUrl,
         token,setToken,credit,setCredit,loadCreditsData,logout,
